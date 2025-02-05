@@ -1,7 +1,6 @@
-
 a. Enabling GPU Slicing on EKS:
 
-1. Deploy NVIDIA Device Plugin with Time-Slicing:
+   1. Deploy NVIDIA Device Plugin with Time-Slicing:
    
     - Deploy the NVIDIA Device Plugin:
 
@@ -13,8 +12,8 @@ a. Enabling GPU Slicing on EKS:
        helm install nvidia-device-plugin nvidia/k8s-device-plugin --set timeSlicing.enabled=true
 
 
-2. Configure Pods to Use Shared GPUs:
-   - In your pod specifications, request GPU resources as needed specify the following in your pod's resource limits: 
+   2. Configure Pods to Use Shared GPUs:
+      - In your pod specifications, request GPU resources as needed specify the following in your pod's resource limits: 
 
      resources:
        limits:
@@ -22,11 +21,11 @@ a. Enabling GPU Slicing on EKS:
     
 b. Integrating GPU Slicing with Karpenter Autoscaler:
 
-1. Install Karpenter:
-   - follow the official Karpenter installation guide to deploy Karpenter in your EKS cluster.
+   1. Install Karpenter:
+      - follow the official Karpenter installation guide to deploy Karpenter in your EKS cluster.
 
-2. Define a Karpenter Provisioner for GPU Nodes:
-   - Create a provisioner configuration that specifies the requirements for GPU nodes. 
+   2. Define a Karpenter Provisioner for GPU Nodes:
+      - Create a provisioner configuration that specifies the requirements for GPU nodes. 
 
    ---
      apiVersion: karpenter.sh/v1alpha5
@@ -58,31 +57,31 @@ b. Integrating GPU Slicing with Karpenter Autoscaler:
      
 3. Deploy Workloads with GPU Requirements:
 
-   - When deploying workloads that require GPU resources, ensure that your pod specifications include the necessary tolerations and resource requests:     
+      - When deploying workloads that require GPU resources, ensure that your pod specifications include the necessary tolerations and resource requests:     
    
-   ---
-     apiVersion: apps/v1
-     kind: Deployment
-     metadata:
-       name: gpu-workload
-     spec:
-       replicas: 1
-       selector:
-         matchLabels:
-           app: gpu-workload
-       template:
-         metadata:
-           labels:
-             app: gpu-workload
-         spec:
-           tolerations:
-             - key: nvidia.com/gpu
-               operator: Exists
-               effect: NoSchedule
-           containers:
-             - name: gpu-container
-               image: your-gpu-enabled-image
-               resources:
-                 limits:
-                   nvidia.com/gpu: 1
+      ---
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: gpu-workload
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: gpu-workload
+          template:
+            metadata:
+              labels:
+                app: gpu-workload
+            spec:
+              tolerations:
+                - key: nvidia.com/gpu
+                  operator: Exists
+                  effect: NoSchedule
+              containers:
+                - name: gpu-container
+                  image: your-gpu-enabled-image
+                  resources:
+                    limits:
+                      nvidia.com/gpu: 1
     
